@@ -1,9 +1,13 @@
 import torch
-from sancho_model import GPTLanguageModel, device
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from model.sancho_model import GPTLanguageModel, device
 
 # Cargar modelo
 model = GPTLanguageModel().to(device)
-model.load_state_dict(torch.load('ckpt.pt', map_location=device))
+ckpt_path = os.path.join(os.path.dirname(__file__), '..', 'model', 'ckpt.pt')
+model.load_state_dict(torch.load(ckpt_path, map_location=device))
 model.eval()
 
 # Crear una entrada falsa (Dummy input)

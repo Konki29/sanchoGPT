@@ -4,7 +4,7 @@
 
 El objetivo de este proyecto es explorar cómo un modelo pequeño puede aprender el estilo y vocabulario del español antiguo a nivel de caracteres.
 
-![Demo](Animation.gif)
+![Demo](media/Animation.gif)
 
 ## 🚀 Características
 
@@ -23,55 +23,58 @@ pip install torch matplotlib seaborn numpy
 
 ## 💻 Uso
 
-El proyecto consta de varios scripts para diferentes propósitos:
+El proyecto consta de varios scripts organizados en carpetas:
 
-### 1. Entrenamiento (`sancho_model.py`)
-Entrena el modelo desde cero. Si lo ejecutas directamente, comenzará el bucle de entrenamiento y guardará el modelo en `ckpt.pt`.
+### 1. Entrenamiento (`model/sancho_model.py`)
+Entrena el modelo desde cero.
 
 ```bash
-python sancho_model.py
+python model/sancho_model.py
 ```
 
 ### 2. Generación de Texto (`gen.py`)
-Carga el modelo entrenado (`ckpt.pt`) y genera texto al estilo de Cervantes.
+Carga el modelo entrenado (`model/ckpt.pt`) y genera texto al estilo de Cervantes.
 
 ```bash
 python gen.py
 ```
 
-### 3. Visualización de Embeddings (`view.py`)
-Genera mapas de calor para visualizar qué ha aprendido el modelo sobre la posición y los caracteres.
-- Genera: `model_internals.png`
+### 3. Visualización de Embeddings (`visualization/view.py`)
+Genera mapas de calor para visualizar qué ha aprendido el modelo.
+- Genera: `media/model_internals.png`
 
 ```bash
-python view.py
+python visualization/view.py
 ```
 
-![Embeddings](model_internals.png)
+![Embeddings](media/model_internals.png)
 
-### 4. Exportación de Vectores 3D (`3dview.py`)
-Exporta los embeddings a archivos TSV (`vectors.tsv` y `metadata.tsv`) para visualizarlos en herramientas como [TensorFlow Projector](https://projector.tensorflow.org/).
+### 4. Exportación de Vectores 3D (`visualization/3dview.py`)
+Exporta los embeddings a archivos TSV (`visualization/vectors.tsv` y `visualization/metadata.tsv`) para visualizarlos en [TensorFlow Projector](https://projector.tensorflow.org/).
 
 ```bash
-python 3dview.py
+python visualization/3dview.py
 ```
 
-### 5. Exportación a ONNX (`onnx.py`)
-Exporta la arquitectura del modelo al formato ONNX para visualizar el grafo computacional en herramientas como [Netron](https://netron.app/).
-- Genera: `sancho_architecture.onnx`
+### 5. Exportación a ONNX (`visualization/onnx.py`)
+Exporta la arquitectura del modelo al formato ONNX para visualizar en [Netron](https://netron.app/).
+- Genera: `visualization/sancho_architecture.onnx`
 
 ```bash
-python onnx.py
+python visualization/onnx.py
 ```
 
-![Arquitectura](sancho_architecture.onnx.png)
+![Arquitectura](media/sancho_architecture.onnx.png)
 
 ## 📂 Estructura del Proyecto
 
-- `sancho_model.py`: Definición del modelo GPT y lógica de entrenamiento.
-- `gen.py`: Script de inferencia para generar texto.
-- `view.py`: Visualización de embeddings con Matplotlib/Seaborn.
-- `3dview.py`: Exportación de metadatos para visualización 3D.
-- `onnx.py`: Exportación del modelo a ONNX.
-- `datos_sancho_mini.txt`: Dataset de entrenamiento (fragmento del Quijote).
-- `ckpt.pt`: Pesos del modelo entrenado (checkpoint).
+- **`model/`**:
+    - `sancho_model.py`: Definición del modelo y entrenamiento.
+    - `datos_sancho_mini.txt`: Dataset.
+    - `ckpt.pt`: Checkpoint del modelo.
+- **`visualization/`**:
+    - `view.py`: Visualización 2D.
+    - `3dview.py`: Exportación 3D.
+    - `onnx.py`: Exportación ONNX.
+- **`media/`**: Imágenes y GIFs del proyecto.
+- `gen.py`: Script principal de generación.

@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
+import os
+
 # --- 1. CONFIGURACIÓN E HIPERPARÁMETROS ---
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 torch.manual_seed(1337)
@@ -22,7 +24,8 @@ learning_rate = 3e-4
 eval_iters = 200
 
 # --- 2. CARGA DE DATOS Y TOKENIZACIÓN ---
-with open('datos_sancho_mini.txt', 'r', encoding='utf-8') as f:
+data_path = os.path.join(os.path.dirname(__file__), 'datos_sancho_mini.txt')
+with open(data_path, 'r', encoding='utf-8') as f:
     text = f.read()
 
 # Construimos el vocabulario
@@ -197,5 +200,6 @@ if __name__ == '__main__':
         optimizer.step()
 
     print("\n--- ¡Entrenamiento completado! ---")
-    torch.save(model.state_dict(), 'ckpt.pt')
-    print("Modelo guardado en 'ckpt.pt'")
+    ckpt_path = os.path.join(os.path.dirname(__file__), 'ckpt.pt')
+    torch.save(model.state_dict(), ckpt_path)
+    print(f"Modelo guardado en '{ckpt_path}'")

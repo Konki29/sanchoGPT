@@ -1,14 +1,18 @@
 import torch
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sancho_model import GPTLanguageModel, device, vocab_size, n_embd
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from model.sancho_model import GPTLanguageModel, device, vocab_size, n_embd
 
 # 1. Cargar el modelo
 model = GPTLanguageModel().to(device)
+ckpt_path = os.path.join(os.path.dirname(__file__), '..', 'model', 'ckpt.pt')
 if torch.cuda.is_available():
-    model.load_state_dict(torch.load('ckpt.pt'))
+    model.load_state_dict(torch.load(ckpt_path))
 else:
-    model.load_state_dict(torch.load('ckpt.pt', map_location='cpu'))
+    model.load_state_dict(torch.load(ckpt_path, map_location='cpu'))
 
 print("Modelo cargado. Generando visualizaciones...")
 
@@ -39,6 +43,7 @@ plt.xlabel("Dimensión del Embedding")
 plt.ylabel("Índice del Carácter")
 
 plt.tight_layout()
-plt.savefig('model_internals.png')
+output_path = os.path.join(os.path.dirname(__file__), '..', 'media', 'model_internals.png')
+plt.savefig(output_path)
 print("¡Imagen guardada como 'model_internals.png'!")
 plt.show()

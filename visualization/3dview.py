@@ -1,9 +1,13 @@
 import torch
-from sancho_model import GPTLanguageModel, itos, device
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from model.sancho_model import GPTLanguageModel, itos, device
 import numpy as np
 
 model = GPTLanguageModel().to(device)
-model.load_state_dict(torch.load('ckpt.pt', map_location=device))
+ckpt_path = os.path.join(os.path.dirname(__file__), '..', 'model', 'ckpt.pt')
+model.load_state_dict(torch.load(ckpt_path, map_location=device))
 
 # Guardar vectores
 weights = model.token_embedding_table.weight.detach().cpu().numpy()

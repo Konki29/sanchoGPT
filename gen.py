@@ -7,7 +7,7 @@ import os
 # Importamos todo lo necesario de sancho.py
 # Nota: Esto ejecutará el código de nivel superior de sancho.py (carga de datos, etc.)
 # pero NO el entrenamiento gracias al if __name__ == '__main__':
-from sancho_model import GPTLanguageModel, encode, decode, device, block_size, n_embd, n_head, n_layer, vocab_size
+from model.sancho_model import GPTLanguageModel, encode, decode, device, block_size, n_embd, n_head, n_layer, vocab_size
 
 print("\nsancho-mini generando texto :D")
 
@@ -19,9 +19,10 @@ top_k = 200
 m = GPTLanguageModel()
 m = m.to(device)
 
-if os.path.exists('ckpt.pt'):
+ckpt_path = os.path.join('model', 'ckpt.pt')
+if os.path.exists(ckpt_path):
     print("Cargando modelo entrenado...")
-    m.load_state_dict(torch.load('ckpt.pt', map_location=device))
+    m.load_state_dict(torch.load(ckpt_path, map_location=device))
 else:
     print("ADVERTENCIA: No se encontró 'ckpt.pt'. Usando modelo sin entrenar.")
 
