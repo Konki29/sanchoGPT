@@ -7,7 +7,7 @@ import os
 # Importamos todo lo necesario de sancho.py
 # Nota: Esto ejecutará el código de nivel superior de sancho.py (carga de datos, etc.)
 # pero NO el entrenamiento gracias al if __name__ == '__main__':
-from sancho import GPTLanguageModel, encode, decode, device, block_size, n_embd, n_head, n_layer, vocab_size
+from sancho_model import GPTLanguageModel, encode, decode, device, block_size, n_embd, n_head, n_layer, vocab_size
 
 print("\nsancho-mini generando texto :D")
 
