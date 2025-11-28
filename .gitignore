@@ -1,0 +1,10 @@
+#Ignorar archivos de entorno virtual
+.venv/
+__pycache__/
+
+#Ignorar archivos de entrenamiento
+*.pt
+
+#Ignorar archivos de exportación
+*.onnx
+*.data
