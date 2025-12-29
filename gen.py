@@ -33,6 +33,7 @@ start_str = "\n"
 context = torch.tensor([encode(start_str)], dtype=torch.long, device=device)
 
 print(start_str, end='')
+
 sys.stdout.flush()
 
 with torch.no_grad():

@@ -24,9 +24,12 @@ learning_rate = 3e-4
 eval_iters = 200
 
 # --- 2. CARGA DE DATOS Y TOKENIZACIÓN ---
-data_path = os.path.join(os.path.dirname(__file__), 'datos_sancho_mini.txt')
+current_dir = os.path.dirname(__file__)
+data_path = os.path.abspath(os.path.join(current_dir, '..', 'data', 'datos_sancho_mini.txt'))
 with open(data_path, 'r', encoding='utf-8') as f:
     text = f.read()
+
+print(len(text))    
 
 # Construimos el vocabulario
 chars = sorted(list(set(text)))

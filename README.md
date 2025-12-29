@@ -1,80 +1,127 @@
 # SanchoGPT 🛡️📖
 
-**SanchoGPT** es un modelo de lenguaje compacto basado en la arquitectura GPT (Generative Pre-trained Transformer), entrenado específicamente con el texto de *"El Ingenioso Hidalgo Don Quijote de la Mancha"* de Miguel de Cervantes.
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-orange)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Status](https://img.shields.io/badge/Status-Experimental-yellow)
 
-El objetivo de este proyecto es explorar cómo un modelo pequeño puede aprender el estilo y vocabulario del español antiguo a nivel de caracteres.
+**SanchoGPT** es una implementación minimalista y educativa de un modelo de lenguaje tipo Transformer (NanoGPT), entrenado desde cero para replicar el estilo y vocabulario del español del Siglo de Oro, basado en el texto de *"El Ingenioso Hidalgo Don Quijote de la Mancha"*.
+
+Este proyecto explora los fundamentos de la **Inteligencia Artificial Generativa** a bajo nivel: tokenización por caracteres, mecanismos de atención y ajuste fino (Fine-Tuning) para chat.
 
 ![Demo](media/Animation.gif)
+*(Visualización del proceso de generación de texto)*
+
+## 🧠 Arquitectura y Especificaciones
+
+El modelo está construido sobre PyTorch siguiendo la arquitectura *Decoder-only Transformer* (similar a GPT-2).
+
+| Parámetro | Valor | Descripción |
+| :--- | :--- | :--- |
+| **Arquitectura** | NanoGPT | Implementación basada en el trabajo de Andrej Karpathy. |
+| **Tokenización** | Carácter (Char-level) | Vocabulario de ~90 tokens únicos. |
+| **Embeddings** | 192 dimensiones | Tamaño del vector vectorial. |
+| **Contexto** | 256 tokens | Ventana de atención máxima. |
+| **Capas / Cabezas** | 4 capas / 4 cabezas | Estructura del Transformer. |
+| **Parámetros** | ~0.15 M | Modelo extremadamente ligero. |
+| **Hardware** | NVIDIA RTX 5070 Ti | Entrenamiento optimizado con CUDA. |
 
 ## 🚀 Características
 
-- **Arquitectura GPT**: Implementación desde cero en PyTorch (Self-Attention, Feed-Forward, LayerNorm).
-- **Entrenamiento a nivel de carácter**: El modelo genera texto letra por letra.
-- **Visualización**: Herramientas para inspeccionar los embeddings y la arquitectura.
-- **Exportación**: Soporte para exportar a ONNX y visualizar en 3D.
+- **Entrenamiento Base (Pre-training):** Aprende la gramática y estilo de Cervantes a partir de texto plano.
+- **Modo Chat (Fine-Tuning):** Capacidad experimental de responder preguntas siguiendo el formato `<|usuario|>` / `<|sancho|>`.
+- **Inferencia Eficiente:** Generación de texto en tiempo real en CPU o GPU.
+- **Introspección:** Scripts para exportar pesos a ONNX y visualizar embeddings en 3D.
 
 ## 🛠️ Instalación
 
-Asegúrate de tener Python instalado. Las dependencias principales son:
+1. Clonar el repositorio:
+   ```bash
+   git clone [https://github.com/tu_usuario/sanchoGPT.git](https://github.com/tu_usuario/sanchoGPT.git)
+   cd sanchoGPT
+   ```
 
-```bash
-pip install torch matplotlib seaborn numpy
-```
+2. Crear entorno virtual e instalar dependencias:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate # o .\venv\Scripts\activate en Windows
+   pip install torch matplotlib seaborn numpy
+   ```
 
-## 💻 Uso
+## 💻 Flujo de Trabajo
 
-El proyecto consta de varios scripts organizados en carpetas:
+El proyecto se divide en dos fases: Entrenamiento del Modelo Base y Ajuste para Chat.
 
-### 1. Entrenamiento (`model/sancho_model.py`)
-Entrena el modelo desde cero.
+### Fase 1: El Modelo Base (Escritor)
 
-```bash
-python model/sancho_model.py
-```
+Entrena el modelo para que aprenda a escribir como Cervantes.
 
-### 2. Generación de Texto (`gen.py`)
-Carga el modelo entrenado (`model/ckpt.pt`) y genera texto al estilo de Cervantes.
+1. **Entrenar:**
+   ```bash
+   python model/sancho_model.py
+   ```
+   *Esto generará `model/ckpt.pt`.*
 
-```bash
-python gen.py
-```
+2. **Generar Texto (Inferencia):**
+   ```bash
+   python gen.py
+   ```
+   *Salida de ejemplo:*
+   > "En un lugar de la mancha de cuyo nombre no quiero acordarme..."
 
-### 3. Visualización de Embeddings (`visualization/view.py`)
-Genera mapas de calor para visualizar qué ha aprendido el modelo.
-- Genera: `media/model_internals.png`
+### Fase 2: Sancho Chat (Conversacional) 🧪
 
+Una capa experimental para dotar al modelo de capacidad de interacción pregunta-respuesta.
+
+1. **Preparar Dataset:**
+   Convierte el dataset JSON a formato de texto con tokens especiales.
+   ```bash
+   python data/json2txt.py
+   ```
+
+2. **Fine-Tuning (SFT):**
+   Refina el modelo base con el dataset de diálogo.
+   ```bash
+   python entrenar_chat.py
+   ```
+   *Esto generará `sancho_chat.pt`.*
+
+3. **Chatear:**
+   Interfaz de consola interactiva.
+   ```bash
+   python chat_console.py
+   ```
+
+## 📊 Visualización e Ingeniería Inversa
+
+Herramientas para entender qué ocurre dentro de la "caja negra".
+
+### Mapa de Calor de Embeddings
+Visualiza la similitud entre caracteres aprendida por el modelo.
 ```bash
 python visualization/view.py
 ```
-
 ![Embeddings](media/model_internals.png)
 
-### 4. Exportación de Vectores 3D (`visualization/3dview.py`)
-Exporta los embeddings a archivos TSV (`visualization/vectors.tsv` y `visualization/metadata.tsv`) para visualizarlos en [TensorFlow Projector](https://projector.tensorflow.org/).
-
-```bash
-python visualization/3dview.py
-```
-
-### 5. Exportación a ONNX (`visualization/onnx.py`)
-Exporta la arquitectura del modelo al formato ONNX para visualizar en [Netron](https://netron.app/).
-- Genera: `visualization/sancho_architecture.onnx`
-
+### Exportación a ONNX
+Exporta el grafo computacional para inspección en [Netron](https://netron.app/).
 ```bash
 python visualization/onnx.py
 ```
-
 ![Arquitectura](media/sancho_architecture.onnx.png)
 
-## 📂 Estructura del Proyecto
+## ⚠️ Limitaciones y Aprendizajes
 
-- **`model/`**:
-    - `sancho_model.py`: Definición del modelo y entrenamiento.
-    - `datos_sancho_mini.txt`: Dataset.
-    - `ckpt.pt`: Checkpoint del modelo.
-- **`visualization/`**:
-    - `view.py`: Visualización 2D.
-    - `3dview.py`: Exportación 3D.
-    - `onnx.py`: Exportación ONNX.
-- **`media/`**: Imágenes y GIFs del proyecto.
-- `gen.py`: Script principal de generación.
+Este proyecto es una prueba de concepto académica con las siguientes limitaciones conocidas:
+- **Tokenización por Caracteres:** Al no usar BPE (Byte Pair Encoding), el modelo tiene dificultades para mantener la coherencia semántica en frases largas o complejas.
+- **Tamaño del Dataset:** Entrenado con un corpus pequeño (~150KB), lo que limita su "conocimiento del mundo" fuera del libro.
+- **Alucinaciones:** En modo chat, puede inventar palabras o repetir bucles si la temperatura es alta.
+
+## 📜 Créditos
+
+- Inspirado y guiado por la **"Guía Completa: Cómo Crear un Modelo GPT desde Cero"** de **Gabriel Merlo** ([Ver vídeo](https://youtu.be/QK4AHZTVf68)).
+- Basado en la serie "Zero to Hero" de **Andrej Karpathy** y su repositorio [nanoGPT](https://github.com/karpathy/nanoGPT).
+- Texto original: Project Gutenberg (Don Quijote).
+
+---
+*Desarrollado con fines educativos en Ingeniería Robótica e IA.*
